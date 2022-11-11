@@ -1,0 +1,40 @@
+QUESTIONS
+
+(Monochoice) Which set of symbols are used to comment a single line in JavaScript?
+	[] <!-- -->
+	[x] //
+	[] /* */
+
+(Monochoice) Let array = ["A","B,"C"]. What is array[1]?
+	[] ["A"]
+	[x] ["B"]
+	[] ["C"]
+
+(Monochoice) An object property has two parts. What are they called?
+	[x] key-value pairs
+	[] method-function calls
+	[] global-local scopes
+	[] key-bind logs
+
+(Monochoice) What word do you start with when trying to declare a new function?
+	[] def
+	[x] function
+	[] var
+	[] init
+
+(Multi-choice) Which of the following are primitive data types in JavaScript?
+	[x] Boolean
+	[] SmallInt
+	[] Charticle
+	[x] Number
+	[x] Null
+
+(Multi-choice) Which of these declare a new variable?
+	[x] let
+	[x] var
+	[x] const
+	[] while
+
+(interactive) What would `10 === 5*2 || 30 === 31` result in if typed into the console?
+	[x] true
+

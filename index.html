@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Fundamentals Quiz</title>
+    <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
+</head>
+
+<body>
+    <header>
+        <!-- Header will contain the title to the left of the screen and the timer to the right. -->
+        <span>
+            <h2>JavaScript Fundamentals Quiz</h2>
+        </span>
+        <h3>Time left: <span id="timer-count">0</span></h3>
+    </header>
+
+    <main>
+        <section class="game-container">
+            <section
+            class="card start">
+                <h1>Welcome to The Challenge!</h1>
+                <button id="start">Start</button>
+            </section>
+
+            <section
+            class="card quiz">
+                <h2>Question appears here</h2>
+                <div class="answer-section">
+                    <div class="choice"> <!-- Type of question requiring choice, either singular or multiple -->
+                        <ul>
+                            <li>Answer 1</li>
+                            <li>Answer 2</li>
+                        </ul>
+                    </div>
+
+                    <div class="input-field"> <!-- Type of question requiring user input -->
+                        <input type="text" id="answer" name="answer" placeholder="Type answer here" />
+                    </div>
+                </div>
+            </section>
+    
+            <section
+            class="card results">
+                <h3>Final score: <span id="final-score">0</span></h3>
+                <div class="submission">
+                    <label for="name-input">Enter initials:</label>
+                    <input type="text" id="name-input" name="name">
+                    <button id="submit">Submit</button>
+                </div>
+
+            </section>
+            
+        </section>
+
+        <aside class="scoreboard">
+            <!-- Will display the scoreboard. Each line will contain an initials-score pair. -->
+            <!-- The most recent attempt will be at the top. Will only list 5 most recent scores. -->
+            <h3>Scoreboard</h3>
+            <ul>
+                <li>INITIALS - Score</li>
+            </ul>
+            <input type="reset" value="Reset scores">
+        </aside>
+    </main>
+    <script src="./assets/js/script.js"></script>
+</body>
+</html>
