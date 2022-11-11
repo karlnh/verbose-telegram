@@ -14,19 +14,22 @@
         <span>
             <h2>JavaScript Fundamentals Quiz</h2>
         </span>
-        <h3>Time left: <span id="timer-count">0</span></h3>
+        <h4>Time left: <span class="timer-count"></span></h4>
+        
     </header>
 
     <main>
         <section class="game-container">
             <section
-            class="card start">
+            class = "card start"
+            style = "display: flex;">
                 <h1>Welcome to The Challenge!</h1>
-                <button id="start">Start</button>
+                <button id="start-button">Start</button>
             </section>
 
             <section
-            class="card quiz">
+            class="card quiz"
+            style = "display: none;">
                 <h2>Question appears here</h2>
                 <div class="answer-section">
                     <div class="choice"> <!-- Type of question requiring choice, either singular or multiple -->
@@ -43,12 +46,15 @@
             </section>
     
             <section
-            class="card results">
-                <h3>Final score: <span id="final-score">0</span></h3>
+            class="card results"
+            style = "display: none;">
+                <h3>Final score: <span class="final-score">0</span></h3>
                 <div class="submission">
                     <label for="name-input">Enter initials:</label>
                     <input type="text" id="name-input" name="name">
                     <button id="submit">Submit</button>
+                    <button id="start-button">Try again?</button>
+
                 </div>
 
             </section>
