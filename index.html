@@ -45,11 +45,17 @@
             class="card results"
             style = "display: none;">
                 <h3>Final score: <span class="final-score">0</span></h3>
-                <div class="submission">
-                    <label for="name-input">Enter initials:</label>
-                    <input type="text" id="name-input" name="name">
-                    <button id="submit-button">Submit</button>
+                <form id="name-form">
+                    <div class="submission">
+                        <label>Enter initials:</label>
+                        <input type="text" id="name-input">
+                        <button>Submit</button>
+                    </div>
+                </form>
                     <button id="again-button">Try again?</button>
+
+
+
 
                 </div>
 
@@ -61,7 +67,7 @@
             <!-- Will display the scoreboard. Each line will contain an initials-score pair. -->
             <!-- The most recent attempt will be at the top. Will only list 5 most recent scores. -->
             <h3>Scoreboard</h3>
-            <ul>
+            <ul id="score-list">
                 <li>INITIALS - Score</li>
             </ul>
             <input type="reset" value="Reset scores">

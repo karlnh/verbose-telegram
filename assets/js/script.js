@@ -17,13 +17,17 @@ let startEl = document.querySelector(".start");
 let quizEl = document.querySelector(".quiz");
 let resultEl = document.querySelector(".results")
 let finalScore = document.querySelector(".final-score");
+let scoreEl = document.querySelector(".scoreboard");
+let scoreList = document.querySelector(".score-list");
 
 let timerTextEl = document.querySelector(".timer-count");
 
 let startButton = document.querySelector("#start-button");
 let againButton = document.querySelector("#again-button");
+
 let submitButton = document.querySelector("#submit-button");
-let submitInput = document.querySelector("#name-input");
+let inputForm = document.querySelector("#name-form");
+let inputFormName = document.querySelector("#name-input");
 
 let qHeader = document.querySelector("#answer-header");
 let qChoice = document.querySelector("#answer-section");
@@ -42,6 +46,7 @@ function init() {
     qIndex = 0;
     secondsLeft = secondsInit;
     timerTextEl.textContent = secondsInit + " seconds left";
+    renderScore()
 }
 
 
@@ -145,6 +150,15 @@ function endQuiz() {
     })
 }
 
+function renderScore() {
+}
+
+function storeScore() {
+    localStorage.setItem("name-score",
+    [JSON.stringify(nameText),
+    JSON.stringify(finalScore.textContent)]);
+}
+
 startButton.addEventListener("click", function () {
     startQuiz();
 })
@@ -182,22 +196,14 @@ qChoice.addEventListener("click", function(event) {
     }
 });
 
-submitButton.addEventListener("submit", function(event) {
+inputForm.addEventListener("submit", function(event) { // initials submission
     event.preventDefault();
+    let nameText = inputFormName.value.trim();
+    console.log("username is: " + nameText,
+    "final score is: " + finalScore.textContent);
 
-    // take submission text
-    let submitText = JSON.stringify(submitInput.value.trim());
-    if (submitText === "") {
-        return;
-    }
-    // take score and submission text 
+    console.log("submit button works");
 
-
-})
-
-function storeScore() {
-    localStorage.setItem("name", submitText);
-    localStorage.setItem("score", )
-}
+});
 
 init();
