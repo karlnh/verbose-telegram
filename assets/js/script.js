@@ -18,18 +18,33 @@ let quizEl = document.querySelector(".quiz");
 let resultEl = document.querySelector(".results")
 let finalScore = document.querySelector(".final-score");
 
+let timerTextEl = document.querySelector(".timer-count");
+
 let startButton = document.querySelector("#start-button");
 let againButton = document.querySelector("#again-button");
+let submitButton = document.querySelector("#submit-button");
+let submitInput = document.querySelector("#name-input");
 
 let qHeader = document.querySelector("#answer-header");
 let qChoice = document.querySelector("#answer-section");
 
-let isWin = false;
+let nameAndScore = [];
+let scoreReduce = 5; // brutal!
 
+// initial variables
+let isWin = false;
 const secondsInit = 30
 let secondsLeft = secondsInit;
-let timerTextEl = document.querySelector(".timer-count");
-timerTextEl.textContent = secondsLeft + " seconds left";
+let qIndex = 0;
+
+function init() {
+    isWin = false;
+    qIndex = 0;
+    secondsLeft = secondsInit;
+    timerTextEl.textContent = secondsInit + " seconds left";
+}
+
+
 
 // QUESTIONS -----------------------------------------------------------------------------
 let q1 = {
@@ -38,7 +53,7 @@ let q1 = {
   cAns: "//"
 };
 let q2 = {
-  title: 'Let array = ["A","B,"C"]. What is array[1]?',
+  title: 'Let array = ["A","B","C"]. What is array[1]?',
   ans: ['["A"]','["B"]','["C"]'],
   cAns: '["B"]'
 };
@@ -61,6 +76,10 @@ function startTimer() {
         } else if (secondsLeft === 2) {
         secondsLeft--; // a little hacky, but if 2, makes it 1, then singularizes the verb
         timerTextEl.textContent = secondsLeft + " second left";
+
+        } else if (isWin === true) { // if already won
+            clearInterval(timerInterval);
+            timerTextEl.textContent = "0";
         
         } else { // If not finished,
         secondsLeft--;
@@ -79,10 +98,11 @@ function renderQuestion(qIndex) {
     // this is making the list of questions. it looks complicated but its not supposed to do much.
     for (var j = 0; j < allQs[qIndex].ans.length; j++) {
         let li = document.createElement("li"); //make list element for each item the in allQs[i].ans array
-        let button = document.createElement("button"); //clickable
+        let button = document.createElement("button"); //makes clickable answer
 
         let ansLine = allQs[qIndex].ans[j]; //individual answer lines
         button.textContent = ansLine; //giving button text content instead of list itself
+        button.setAttribute("index", j);
         li.appendChild(button); // adding the button to the list item created
 
         qChoice.appendChild(li);//adding the list to qAnswerList
@@ -91,17 +111,17 @@ function renderQuestion(qIndex) {
 
 
 function startQuiz() {
-    isWin = false; //resetting win condition
+    init(); // needed so it starts the clock display correctly
     startEl.setAttribute("style", "display: none;"); // Hiding start;
     quizEl.setAttribute("style", "display: flex;"); // Showing quiz;
 
     startTimer();
 
     if (secondsLeft > 0) {
-
         // set selected question as the content to be displayed
-        let qIndex = 0;
         renderQuestion(qIndex);
+
+        
         
 
     } else {
@@ -111,20 +131,73 @@ function startQuiz() {
 }
 
 function endQuiz() {
-    finalScore.textContent = timerTextEl.innerHTML[0]; // Score is just whatever the number of timerText is
-    secondsLeft = secondsInit; // resetting seconds to initial number
-    timerTextEl.textContent = secondsInit + " seconds left";
+    scoreText = secondsLeft;
+    finalScore.textContent = scoreText; // Score is just whatever the number of timerText is
     quizEl.setAttribute("style", "display: none;"); // Hiding quiz;
-    resultEl.setAttribute("style", "display: flex;"); // Hiding quiz;
+    resultEl.setAttribute("style", "display: flex;"); // Showing results;
 
+    //event listener ok within this scope bc this button shouldnt appear any time else besides endquiz().
     againButton.addEventListener("click", function () { //reset the quiz
         resultEl.setAttribute("style", "display: none;");
         quizEl.setAttribute("style", "display: none;");
         startEl.setAttribute("style", "display: flex");
-        
+        init();
     })
 }
 
 startButton.addEventListener("click", function () {
-  startQuiz();
+    startQuiz();
 })
+
+qChoice.addEventListener("click", function(event) {
+    var element = event.target;
+
+    switch (element.innerHTML) {
+        case q1.cAns:
+            console.log('Awesome!');
+            break;
+        case q2.cAns:
+            console.log('Nice!');
+            break;
+        case q3.cAns:
+            console.log('Great!');
+            break;
+        default:
+            console.log('Wrong.');
+            secondsLeft = secondsLeft - scoreReduce;
+            break;
+    }
+
+    if (element.matches("button") === true) {
+        if (qIndex < allQs.length-1) { // if questions not exhausted,
+            qIndex++ // next question
+            renderQuestion(qIndex); // RENDER the next question
+        }
+        else { // if qIndex has reached allQs.length-1,
+            if (secondsLeft > 0) { // If you completed before timing out,
+                isWin = true; // Stops the clock, basically.
+            }
+            endQuiz();
+        }
+    }
+});
+
+submitButton.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    // take submission text
+    let submitText = JSON.stringify(submitInput.value.trim());
+    if (submitText === "") {
+        return;
+    }
+    // take score and submission text 
+
+
+})
+
+function storeScore() {
+    localStorage.setItem("name", submitText);
+    localStorage.setItem("score", )
+}
+
+init();
