@@ -1,5 +1,6 @@
 * {
     font-family: "Helvetica", "Roboto", sans-serif;
+    background-color: rgb(240, 240, 240);
 }
 
 header {
@@ -10,9 +11,6 @@ header {
 
     margin: 1%;
     padding: 1% 3%;
-}
-
-header h4 {
 }
 
 main {
@@ -31,35 +29,60 @@ main {
 .card { /* default styling for cards */
     /* `display: flex/none;` decided through javascript */
     flex-flow: column wrap;
-    align-content: center;
-    justify-content: center;
     place-items: center;
 
     margin: 1%;
     padding: 1%;
 }
 
+#start-button,
+#again-button,
+.submission > button,
+.scoreboard > input {
+    background-color: orangered;
+    color: white;
+    font-weight: bolder;
+    padding: 0.25rem;
+}
+
+
 .start {
     text-align: center;
+}
+
+.start p {
+    margin: 0.5%;
+}
+
+#start-button {
+    margin: 1%;
+    width: 25%;
 }
 
 .quiz {
 }
 
-.choice ul {
+#answer-section {
     padding: 0;
 }
 
-.choice li {
+#answer-section li {
     list-style: none;
 
     margin: 5% 0;
-    padding: 5%;
+    padding: 5% 0;
 
-    background: goldenrod;
-    border: 1px solid #b8741b;
-    border-radius: 0.3rem;
+    min-width: 100px;
 
+}
+
+#answer-section button {
+    min-width: 200px;
+    min-width: 100%;
+
+    padding: 10px;
+    border: 1px solid black;
+    box-shadow: 0 0 20px 5px white;
 }
 
 .input-field {
@@ -70,21 +93,28 @@ main {
 .results {
 }
 
+#again-button {
+    margin: 3%;
+}
+
 .scoreboard {
     display: flex;
     flex-flow: column wrap;
 
     width: 24%;
+
 }
 
 .scoreboard > * {
     margin: 3%;
+
+    list-style: none;
+    
 }
 
 .scoreboard h3 {
     text-align: center;
 }
-
 
 @media (max-width: 650px) {
     main, header {
@@ -93,5 +123,12 @@ main {
     }
     main h1 {
         text-align: center;
+    }
+
+    .scoreboard {
+    }
+
+    .scoreboard > * {
+        margin: 0%;
     }
 }

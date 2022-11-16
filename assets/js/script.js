@@ -33,29 +33,21 @@ let qHeader = document.querySelector("#answer-header");
 let qChoice = document.querySelector("#answer-section");
 
 let nameAndScore = [];
-let scoreReduce = 5; // brutal!
-
-// initial variables
-let isWin = false;
-const secondsInit = 30
-let secondsLeft = secondsInit;
-let qIndex = 0;
+let scoreReduce = 5; // reduce score by this amount per wrong answer
 
 function init() {
     isWin = false;
-    qIndex = 0;
+    qIndex = 0; // resetting questions to beginning
     secondsLeft = secondsInit;
     timerTextEl.textContent = secondsInit + " seconds left";
     renderScore()
 }
 
-
-
 // QUESTIONS -----------------------------------------------------------------------------
 let q1 = {
   title: "Which set of symbols are used to comment a single line in JavaScript?",
-  ans: ["<!-- -->", "//", "/* */"],
-  cAns: "//"
+  ans: ["// comment", "<!-- comment -->", "/* comment */"],
+  cAns: "// comment"
 };
 let q2 = {
   title: 'Let array = ["A","B","C"]. What is array[1]?',
@@ -64,13 +56,18 @@ let q2 = {
 };
 let q3 = {
   title: "An object property has two parts. What are they called?",
-  ans: ["key-value pairs", "method-function calls", "global-local scopes"],
+  ans: ["method-function calls", "global-local scopes", "key-value pairs"],
   cAns: "key-value pairs"
 };
 
 let allQs = [q1,q2,q3]; //just monochoice questions here
-
 // QUESTIONS -----------------------------------------------------------------------------
+
+const secondsInit = 8 * allQs.length; // length of quiz depends on how many questions there are!
+let secondsLeft = secondsInit;
+// initial variables
+let isWin = false;
+let qIndex = 0;
 
 function startTimer() {
     let timerInterval = setInterval(function() {
@@ -103,6 +100,7 @@ function renderQuestion(qIndex) {
     // this is making the list of questions. it looks complicated but its not supposed to do much.
     for (var j = 0; j < allQs[qIndex].ans.length; j++) {
         let li = document.createElement("li"); //make list element for each item the in allQs[i].ans array
+        li.setAttribute("style", "margin-bottom: 2%;")
         let button = document.createElement("button"); //makes clickable answer
 
         let ansLine = allQs[qIndex].ans[j]; //individual answer lines
@@ -178,7 +176,13 @@ qChoice.addEventListener("click", function(event) {
             break;
         default:
             console.log('Wrong.');
-            secondsLeft = secondsLeft - scoreReduce;
+            if (secondsLeft - scoreReduce > 0) { // don't let secondsLeft go negative with scoreReduce
+                secondsLeft = secondsLeft - scoreReduce;
+            } else {
+                secondsLeft = 0;
+                break;
+            }
+            
             break;
     }
 
