@@ -28,11 +28,24 @@ let againButton = document.querySelector("#again-button");
 let submitButton = document.querySelector("#submit-button");
 let inputForm = document.querySelector("#name-form");
 let userName = document.querySelector("#name-input");
+let resetScoresEl = document.querySelector("#reset");
 
 let qHeader = document.querySelector("#answer-header");
 let qChoice = document.querySelector("#answer-section");
 
-var storedScores = [];
+
+// if (JSON.parse(localStorage.getItem("id-score")) === null) {
+//     let scoreJSON = [];
+// } else if (scoreJSON[0] === null) { // if no local storage, make an empty array
+//     let scoreJSON = [];
+// } else {
+//     let scoreJSON = JSON.parse(localStorage.getItem("id-score"));
+// }
+
+let scoreJSON = JSON.parse(localStorage.getItem("id-score"));
+if (scoreJSON === null) {
+    scoreJSON = [];
+}
 
 let q1 = {
   title: "Which set of symbols are used to comment a single line in JavaScript?",
@@ -90,6 +103,25 @@ function startTimer() {
 }
 
 
+function startQuiz() {
+    init(); // needed so it starts the clock display correctly
+    startEl.setAttribute("style", "display: none;"); // Hiding start;
+    quizEl.setAttribute("style", "display: flex;"); // Showing quiz;
+
+    startTimer();
+
+    if (secondsLeft > 0) {
+        // set selected question as the content to be displayed
+        renderQuestion(qIndex);
+
+        
+        
+
+    } else {
+        endQuiz();
+    }
+ 
+}
 
 // Loads a question from the question array along with page formatting.
 function renderQuestion(qIndex) {
@@ -112,26 +144,6 @@ function renderQuestion(qIndex) {
 }
 
 
-function startQuiz() {
-    init(); // needed so it starts the clock display correctly
-    startEl.setAttribute("style", "display: none;"); // Hiding start;
-    quizEl.setAttribute("style", "display: flex;"); // Showing quiz;
-
-    startTimer();
-
-    if (secondsLeft > 0) {
-        // set selected question as the content to be displayed
-        renderQuestion(qIndex);
-
-        
-        
-
-    } else {
-        endQuiz();
-    }
- 
-}
-
 function endQuiz() {
     scoreText = secondsLeft;
     finalScore.textContent = scoreText; // Score is just whatever the number of timerText is
@@ -148,18 +160,15 @@ function endQuiz() {
 }
 
 function renderScore() {
-    scoreList.innerHTML = ""; // clearing default formatting
+    scoreList.textContent = ""; // clearing default formatting
+    console.log(scoreList);
 
-    // for (let i = 0; i < idScore.length; i++) {
-    //     var li = document.createElement("li");
-    //     li.textContent = idScore[i];
-        
-    //     scoreList.appendChild(li);
-    // }
-}
-
-function storeScore() {
-}
+    for (let i = 0; i < scoreJSON.length; i++) {
+        var li = document.createElement("li");
+        li.textContent = scoreJSON[i].name + " --- " + scoreJSON[i].score;
+        scoreList.prepend(li);
+        }
+    }
 
 startButton.addEventListener("click", function () {
     startQuiz();
@@ -170,13 +179,10 @@ qChoice.addEventListener("click", function(event) {
 
     switch (element.innerHTML) {
         case q1.cAns:
-            console.log('Awesome!');
             break;
         case q2.cAns:
-            console.log('Nice!');
             break;
         case q3.cAns:
-            console.log('Great!');
             break;
         default:
             console.log('Wrong. Time -' + scoreReduce);
@@ -207,21 +213,29 @@ qChoice.addEventListener("click", function(event) {
 inputForm.addEventListener("submit", function(event) { // initials submission
     event.preventDefault();
 
-    let nameText = userName.value.trim();
-    console.log("username is: " + nameText,
-    "final score is: " + finalScore.textContent);
+    if (userName.value === "") {
+        userName.value = "default";
+    }
 
     const newScore = { // obj for new score that will be overridden each time a new score is entered
-        name: nameText,
+        name: userName.value.trim(),
         score: finalScore.textContent
     }
 
-    storedScores.push(newScore); // adding the new score to the stored scores
-    localStorage.setItem("storedScores", JSON.stringify(storedScores)); // re-setting stored scores to include new score
+    scoreJSON.push(newScore);
+    localStorage.setItem("id-score", JSON.stringify(scoreJSON)); // score only stringified after combining old scores and new score
     
+    renderScore();
 
     
+});
 
+resetScoresEl.addEventListener("click", function() {
+    localStorage.clear();
+    scoreJSON = []; // any temporary variable storage is cleared too 
+
+    scoreList.innerHTML = "";
+    console.log("Local storage cleared");
 });
 
 init();
