@@ -18,7 +18,7 @@ let quizEl = document.querySelector(".quiz");
 let resultEl = document.querySelector(".results")
 let finalScore = document.querySelector(".final-score");
 let scoreEl = document.querySelector(".scoreboard");
-let scoreList = document.querySelector(".score-list");
+let scoreList = document.querySelector("#score-list");
 
 let timerTextEl = document.querySelector(".timer-count");
 
@@ -27,23 +27,13 @@ let againButton = document.querySelector("#again-button");
 
 let submitButton = document.querySelector("#submit-button");
 let inputForm = document.querySelector("#name-form");
-let inputFormName = document.querySelector("#name-input");
+let userName = document.querySelector("#name-input");
 
 let qHeader = document.querySelector("#answer-header");
 let qChoice = document.querySelector("#answer-section");
 
-let nameAndScore = [];
-let scoreReduce = 5; // reduce score by this amount per wrong answer
+var storedScores = [];
 
-function init() {
-    isWin = false;
-    qIndex = 0; // resetting questions to beginning
-    secondsLeft = secondsInit;
-    timerTextEl.textContent = secondsInit + " seconds left";
-    renderScore()
-}
-
-// QUESTIONS -----------------------------------------------------------------------------
 let q1 = {
   title: "Which set of symbols are used to comment a single line in JavaScript?",
   ans: ["// comment", "<!-- comment -->", "/* comment */"],
@@ -59,15 +49,24 @@ let q3 = {
   ans: ["method-function calls", "global-local scopes", "key-value pairs"],
   cAns: "key-value pairs"
 };
+let q4 = {
+    
+}
 
 let allQs = [q1,q2,q3]; //just monochoice questions here
-// QUESTIONS -----------------------------------------------------------------------------
 
 const secondsInit = 8 * allQs.length; // length of quiz depends on how many questions there are!
 let secondsLeft = secondsInit;
-// initial variables
-let isWin = false;
-let qIndex = 0;
+let scoreReduce = Math.floor(secondsInit / 5); // reduce score by this amount per wrong answer
+
+function init() {
+    let nameAndScore = [];
+    isWin = false;
+    qIndex = 0; // resetting questions to beginning
+    secondsLeft = secondsInit;
+    timerTextEl.textContent = secondsInit + " seconds left";
+    renderScore();
+}
 
 function startTimer() {
     let timerInterval = setInterval(function() {
@@ -149,12 +148,17 @@ function endQuiz() {
 }
 
 function renderScore() {
+    scoreList.innerHTML = ""; // clearing default formatting
+
+    // for (let i = 0; i < idScore.length; i++) {
+    //     var li = document.createElement("li");
+    //     li.textContent = idScore[i];
+        
+    //     scoreList.appendChild(li);
+    // }
 }
 
 function storeScore() {
-    localStorage.setItem("name-score",
-    [JSON.stringify(nameText),
-    JSON.stringify(finalScore.textContent)]);
 }
 
 startButton.addEventListener("click", function () {
@@ -175,7 +179,7 @@ qChoice.addEventListener("click", function(event) {
             console.log('Great!');
             break;
         default:
-            console.log('Wrong.');
+            console.log('Wrong. Time -' + scoreReduce);
             if (secondsLeft - scoreReduce > 0) { // don't let secondsLeft go negative with scoreReduce
                 secondsLeft = secondsLeft - scoreReduce;
             } else {
@@ -202,11 +206,21 @@ qChoice.addEventListener("click", function(event) {
 
 inputForm.addEventListener("submit", function(event) { // initials submission
     event.preventDefault();
-    let nameText = inputFormName.value.trim();
+
+    let nameText = userName.value.trim();
     console.log("username is: " + nameText,
     "final score is: " + finalScore.textContent);
 
-    console.log("submit button works");
+    const newScore = { // obj for new score that will be overridden each time a new score is entered
+        name: nameText,
+        score: finalScore.textContent
+    }
+
+    storedScores.push(newScore); // adding the new score to the stored scores
+    localStorage.setItem("storedScores", JSON.stringify(storedScores)); // re-setting stored scores to include new score
+    
+
+    
 
 });
 

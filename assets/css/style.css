@@ -11,6 +11,8 @@ header {
 
     margin: 1%;
     padding: 1% 3%;
+
+    border-bottom: 3px solid orangered;
 }
 
 main {
@@ -38,7 +40,7 @@ main {
 #start-button,
 #again-button,
 .submission > button,
-.scoreboard > input {
+.scoreboard > input { /* styling for buttons */
     background-color: orangered;
     color: white;
     font-weight: bolder;
