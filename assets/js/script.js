@@ -16,22 +16,21 @@
 let startEl = document.querySelector(".start");
 let quizEl = document.querySelector(".quiz");
 let resultEl = document.querySelector(".results")
-let finalScore = document.querySelector(".final-score");
-let scoreEl = document.querySelector(".scoreboard");
-let scoreList = document.querySelector("#score-list");
+let scoreSpan = document.querySelector(".final-score");
+let scoreListEl = document.querySelector("#score-list");
 
 let timerTextEl = document.querySelector(".timer-count");
 
 let startButton = document.querySelector("#start-button");
 let againButton = document.querySelector("#again-button");
-
 let submitButton = document.querySelector("#submit-button");
-let inputForm = document.querySelector("#name-form");
-let userName = document.querySelector("#name-input");
-let resetScoresEl = document.querySelector("#reset");
+let resetButton = document.querySelector("#reset-button");
 
-let qHeader = document.querySelector("#answer-header");
-let qChoice = document.querySelector("#answer-section");
+let inputForm = document.querySelector("#name-form");
+let nameInputEl = document.querySelector("#name-input");
+
+let qHeader = document.querySelector("#question-header");
+let qChoice = document.querySelector("#answer-options");
 
 
 // if (JSON.parse(localStorage.getItem("id-score")) === null) {
@@ -42,6 +41,7 @@ let qChoice = document.querySelector("#answer-section");
 //     let scoreJSON = JSON.parse(localStorage.getItem("id-score"));
 // }
 
+// Getting local storage or initializing score for setting local storage
 let scoreJSON = JSON.parse(localStorage.getItem("id-score"));
 if (scoreJSON === null) {
     scoreJSON = [];
@@ -50,7 +50,7 @@ if (scoreJSON === null) {
 let q1 = {
   title: "Which set of symbols are used to comment a single line in JavaScript?",
   ans: ["// comment", "<!-- comment -->", "/* comment */"],
-  cAns: "// comment"
+  cAns: "// comment" // "correct answer"
 };
 let q2 = {
   title: 'Let array = ["A","B","C"]. What is array[1]?',
@@ -63,90 +63,91 @@ let q3 = {
   cAns: "key-value pairs"
 };
 let q4 = {
-    
-}
+    title: "What word do you start with when trying to declare a new function?",
+    ans: ["def","function","var","init"],
+    cAns: "function"
+};
+let q5 = {
+    title: "What would `10 === 5+5` result in if typed into the console?",
+    ans: ["true and false", "true and true","true", "false"],
+    cAns: "true"
+};
+let q6 = {
+    title: "Which of these would display an alert popup on the user's screen?",
+    ans: ['windows.pop()','window.alert()','user.window(alert)','window.prompt()'],
+    cAns: 'window.alert()'
+};
+let q7 = {
+    title: "Which of these is a string?",
+    ans: ['"text"',"[text]","<text>","{text}"],
+    cAns: '"text"'
+};
+let q8 = {
+    title: "What would math.floor(5.7) result in?",
+    ans: ["5.5","6","5","7"],
+    cAns: "5"
+};
+let allQs = [q1,q2,q3,q4,q5,q6,q7,q8]; // to be used in rendering questions
 
-let allQs = [q1,q2,q3]; //just monochoice questions here
-
-const secondsInit = 8 * allQs.length; // length of quiz depends on how many questions there are!
+// Timer and score
+const secondsInit = 8 * allQs.length; // length of quiz depends on question amount. 8 seconds / question
 let secondsLeft = secondsInit;
 let scoreReduce = Math.floor(secondsInit / 5); // reduce score by this amount per wrong answer
 
 function init() {
-    let nameAndScore = [];
     isWin = false;
     qIndex = 0; // resetting questions to beginning
     secondsLeft = secondsInit;
     timerTextEl.textContent = secondsInit + " seconds left";
     renderScore();
 }
-
 function startTimer() {
     let timerInterval = setInterval(function() {
         if (secondsLeft === 0) { // If finished,
         clearInterval(timerInterval);
         endQuiz();
-        
         } else if (secondsLeft === 2) {
         secondsLeft--; // a little hacky, but if 2, makes it 1, then singularizes the verb
         timerTextEl.textContent = secondsLeft + " second left";
-
         } else if (isWin === true) { // if already won
             clearInterval(timerInterval);
             timerTextEl.textContent = "0";
-        
         } else { // If not finished,
         secondsLeft--;
         timerTextEl.textContent = secondsLeft + " seconds left";
         }
     }, 1000);
 }
-
-
 function startQuiz() {
     init(); // needed so it starts the clock display correctly
     startEl.setAttribute("style", "display: none;"); // Hiding start;
     quizEl.setAttribute("style", "display: flex;"); // Showing quiz;
-
     startTimer();
-
     if (secondsLeft > 0) {
         // set selected question as the content to be displayed
         renderQuestion(qIndex);
-
-        
-        
-
     } else {
         endQuiz();
     }
- 
 }
-
 // Loads a question from the question array along with page formatting.
 function renderQuestion(qIndex) {
     qHeader.textContent = allQs[qIndex].title; //text content is the title of the qIndex obj
     qChoice.innerHTML = '';
-
     // this is making the list of questions. it looks complicated but its not supposed to do much.
     for (var j = 0; j < allQs[qIndex].ans.length; j++) {
         let li = document.createElement("li"); //make list element for each item the in allQs[i].ans array
         li.setAttribute("style", "margin-bottom: 2%;")
         let button = document.createElement("button"); //makes clickable answer
-
         let ansLine = allQs[qIndex].ans[j]; //individual answer lines
         button.textContent = ansLine; //giving button text content instead of list itself
-        button.setAttribute("index", j);
         li.appendChild(button); // adding the button to the list item created
-
         qChoice.appendChild(li);//adding the list to qAnswerList
     }
 }
-
-
 function endQuiz() {
     scoreText = secondsLeft;
-    finalScore.textContent = scoreText; // Score is just whatever the number of timerText is
+    scoreSpan.textContent = scoreText; // Score is just whatever the number of timerText is
     quizEl.setAttribute("style", "display: none;"); // Hiding quiz;
     resultEl.setAttribute("style", "display: flex;"); // Showing results;
 
@@ -158,44 +159,58 @@ function endQuiz() {
         init();
     })
 }
-
+// For rendering aside scoreboard.
 function renderScore() {
-    scoreList.textContent = ""; // clearing default formatting
-    console.log(scoreList);
-
+    scoreListEl.textContent = ""; // clearing default formatting
     for (let i = 0; i < scoreJSON.length; i++) {
         var li = document.createElement("li");
         li.textContent = scoreJSON[i].name + " --- " + scoreJSON[i].score;
-        scoreList.prepend(li);
+        scoreListEl.prepend(li);
         }
     }
-
+// Start game
 startButton.addEventListener("click", function () {
     startQuiz();
 })
-
+// Correct answer checker and switch for next question
 qChoice.addEventListener("click", function(event) {
     var element = event.target;
-
     switch (element.innerHTML) {
         case q1.cAns:
+            console.log("good!");
             break;
         case q2.cAns:
+            console.log("good!");
             break;
         case q3.cAns:
+            console.log("good!");
             break;
+        case q4.cAns:
+            console.log("good!");
+            break;
+        case q5.cAns:
+            console.log("good!");
+            break;
+        case q6.cAns:
+            console.log("good!");
+            break;
+        case q7.cAns:
+            console.log("good!");
+            break;
+        case q8.cAns:
+            console.log("good!");
+            break;        
         default:
-            console.log('Wrong. Time -' + scoreReduce);
+            console.log('wrong. time -' + scoreReduce);
             if (secondsLeft - scoreReduce > 0) { // don't let secondsLeft go negative with scoreReduce
                 secondsLeft = secondsLeft - scoreReduce;
             } else {
-                secondsLeft = 0;
-                break;
+                secondsLeft = 0; // if secondsLeft - score Reduce <= 0
+                break; // stop the whole thing!
             }
             
             break;
     }
-
     if (element.matches("button") === true) {
         if (qIndex < allQs.length-1) { // if questions not exhausted,
             qIndex++ // next question
@@ -209,33 +224,25 @@ qChoice.addEventListener("click", function(event) {
         }
     }
 });
-
-inputForm.addEventListener("submit", function(event) { // initials submission
+// Initials submission
+inputForm.addEventListener("submit", function(event) {
     event.preventDefault();
-
-    if (userName.value === "") {
-        userName.value = "default";
+    if (nameInputEl.value === "") {
+        nameInputEl.value = "default";
     }
-
     const newScore = { // obj for new score that will be overridden each time a new score is entered
-        name: userName.value.trim(),
-        score: finalScore.textContent
+        name: nameInputEl.value.trim(),
+        score: scoreSpan.textContent
     }
-
     scoreJSON.push(newScore);
     localStorage.setItem("id-score", JSON.stringify(scoreJSON)); // score only stringified after combining old scores and new score
-    
     renderScore();
-
-    
 });
-
-resetScoresEl.addEventListener("click", function() {
+// Scoreboard reset
+resetButton.addEventListener("click", function() {
     localStorage.clear();
     scoreJSON = []; // any temporary variable storage is cleared too 
-
-    scoreList.innerHTML = "";
+    scoreListEl.innerHTML = "";
     console.log("Local storage cleared");
 });
-
 init();
